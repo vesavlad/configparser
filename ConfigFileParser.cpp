@@ -10,7 +10,7 @@
 #include <string>
 #include "./ConfigFileParser.h"
 
-using namespace config;
+using namespace configparser;
 
 // _____________________________________________________________________________
 ConfigFileParser::ConfigFileParser() {}

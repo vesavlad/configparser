@@ -1,2 +1,2 @@
 file(GLOB_RECURSE cfgparser_SRC *.cpp)
-add_library(configfileparser ${cfgparser_SRC})
+add_library(configparser ${cfgparser_SRC})
