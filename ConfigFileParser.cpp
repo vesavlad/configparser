@@ -21,7 +21,7 @@ void ConfigFileParser::parse(const std::string& path) {
   std::set<std::string> headers;
   KeyVals curKV;
   std::string tmp, tmp2;
-  std::fstream is(path);
+  std::ifstream is(path);
   char c;
   size_t l = 1, pos = 0, valLine = 0, valPos = 0;
 
