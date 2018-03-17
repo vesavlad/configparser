@@ -22,6 +22,11 @@ void ConfigFileParser::parse(const std::string& path) {
   KeyVals curKV;
   std::string tmp, tmp2;
   std::ifstream is(path);
+
+  if (!is.good()) {
+    throw ParseExc(0, 0, "valid file", "file I could not open", path);
+  }
+
   char c;
   size_t l = 1, pos = 0, valLine = 0, valPos = 0;
 
