@@ -301,8 +301,8 @@ std::string ConfigFileParser::toString() const {
 
 // _____________________________________________________________________________
 std::string ConfigFileParser::trim(const std::string& str) const {
-  size_t s = str.find_first_not_of(' ');
-  size_t e = str.find_last_not_of(' ');
+  size_t s = str.find_first_not_of(" \f\n\r\t\v");
+  size_t e = str.find_last_not_of(" \f\n\r\t\v");
   if (s == std::string::npos) return "";
   return str.substr(s, e - s + 1);
 }
