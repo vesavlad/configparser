@@ -16,6 +16,7 @@ struct Val {
   std::string val;
   size_t line;
   size_t pos;
+  std::string file;
 };
 
 typedef std::string Key;
@@ -32,6 +33,19 @@ enum State {
   AW_KEY_VAL_VAL,
   IN_KEY_VAL_VAL_HANG,
   IN_KEY_VAL_VAL_HANG_END
+};
+
+class ParseFileExc : public std::exception {
+ public:
+  ParseFileExc(const std::string file) : _file(file) {
+    std::stringstream ss;
+    ss << _file << ": Could not open file.";
+    _msg = ss.str();
+  };
+  virtual const char* what() const throw() { return _msg.c_str(); }
+
+ private:
+  std::string _file, _msg;
 };
 
 class ParseExc : public std::exception {
@@ -81,5 +95,7 @@ class ConfigFileParser {
   bool isKeyChar(char t) const;
   std::string trim(const std::string& str) const;
   bool toBool(std::string str) const;
+
+  void updateVals(size_t sec, const KeyVals& kvs);
 };
 }

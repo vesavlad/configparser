@@ -24,7 +24,7 @@ void ConfigFileParser::parse(const std::string& path) {
   std::ifstream is(path);
 
   if (!is.good()) {
-    throw ParseExc(0, 0, "valid file", "file I could not open", path);
+    throw ParseFileExc(path);
   }
 
   char c;
@@ -45,12 +45,12 @@ void ConfigFileParser::parse(const std::string& path) {
       case NONE:
         if (std::isspace(c)) continue;
         if (c == '[') {
-          if (tmp.size()) curKV[tmp] = Val{trim(tmp2), valLine, valPos};
+          if (tmp.size()) curKV[tmp] = Val{trim(tmp2), valLine, valPos, path};
           tmp.clear();
           tmp2.clear();
           for (auto h : headers) {
             if (_secs.find(h) != _secs.end()) {
-              _kvs[_secs[h]].insert(curKV.begin(), curKV.end());
+              updateVals(_secs[h], curKV);
             } else {
               _secs[h] = _kvs.size();
               _kvs.push_back(curKV);
@@ -139,12 +139,12 @@ void ConfigFileParser::parse(const std::string& path) {
           continue;
         }
         if (c == '[') {
-          curKV[tmp] = Val{trim(tmp2), valLine, valPos};
+          curKV[tmp] = Val{trim(tmp2), valLine, valPos, path};
           tmp.clear();
           tmp2.clear();
           for (auto h : headers) {
             if (_secs.find(h) != _secs.end()) {
-              _kvs[_secs[h]].insert(curKV.begin(), curKV.end());
+              updateVals(_secs[h], curKV);
             } else {
               _secs[h] = _kvs.size();
               _kvs.push_back(curKV);
@@ -156,7 +156,7 @@ void ConfigFileParser::parse(const std::string& path) {
           continue;
         }
         if (isKeyChar(c)) {
-          curKV[tmp] = Val{trim(tmp2), valLine, valPos};
+          curKV[tmp] = Val{trim(tmp2), valLine, valPos, path};
           tmp.clear();
           tmp2.clear();
           tmp.push_back(c);
@@ -186,12 +186,12 @@ void ConfigFileParser::parse(const std::string& path) {
     throw ParseExc(l, pos, "character", "<EOF>", path);
   }
 
-  if (tmp.size() && tmp2.size()) curKV[tmp] = Val{tmp2, valLine, valPos};
+  if (tmp.size() && tmp2.size()) curKV[tmp] = Val{tmp2, valLine, valPos, path};
   tmp.clear();
   tmp2.clear();
   for (auto h : headers) {
     if (_secs.find(h) != _secs.end()) {
-      _kvs[_secs[h]].insert(curKV.begin(), curKV.end());
+      updateVals(_secs[h], curKV);
     } else {
       _secs[h] = _kvs.size();
       _kvs.push_back(curKV);
@@ -326,4 +326,11 @@ bool ConfigFileParser::hasKey(Sec section, Key key) const {
     return false;
 
   return true;
+}
+
+// _____________________________________________________________________________
+void ConfigFileParser::updateVals(size_t sec, const KeyVals& kvs) {
+  for (auto& kv : kvs) {
+    _kvs[sec][kv.first] = kv.second;
+  }
 }
