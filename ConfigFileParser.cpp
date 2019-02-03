@@ -44,7 +44,7 @@ void ConfigFileParser::parse(const std::string& path) {
     switch (s) {
       case NONE:
         if (std::isspace(c)) continue;
-        if (c == '[') {
+        if (c == '[' || c == '<') {
           if (tmp.size()) curKV[tmp] = Val{trim(tmp2), valLine, valPos, path};
           tmp.clear();
           tmp2.clear();
@@ -58,7 +58,8 @@ void ConfigFileParser::parse(const std::string& path) {
           }
           headers.clear();
           curKV.clear();
-          s = IN_HEAD;
+          if (c == '[') s = IN_HEAD;
+          if (c == '<') s = IN_INC;
           continue;
         }
         if (isKeyChar(c)) {
@@ -69,6 +70,19 @@ void ConfigFileParser::parse(const std::string& path) {
         }
         throw ParseExc(l, pos, "header or key", std::string("'") + c + "'",
                        path);
+
+      case IN_INC:
+        if (c == '\n') {
+          throw ParseExc(l, pos, ">", "<newline>", path);
+        } else if (c == '>') {
+          parse(tmp);
+          tmp.clear();
+          s = NONE;
+        } else {
+          tmp += c;
+        }
+        continue;
+
       case IN_HEAD:
         if (std::isspace(c)) continue;
         if (isKeyChar(c)) {
@@ -316,6 +330,11 @@ const std::unordered_map<std::string, size_t> ConfigFileParser::getSecs()
 // _____________________________________________________________________________
 const Val& ConfigFileParser::getVal(Sec section, Key key) const {
   return _kvs[_secs.find(section)->second].find(key)->second;
+}
+
+// _____________________________________________________________________________
+const KeyVals& ConfigFileParser::getKeyVals(Sec section) const {
+  return _kvs[_secs.find(section)->second];
 }
 
 // _____________________________________________________________________________

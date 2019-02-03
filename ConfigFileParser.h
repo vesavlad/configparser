@@ -26,6 +26,7 @@ typedef std::unordered_map<std::string, Val> KeyVals;
 enum State {
   NONE,
   IN_HEAD,
+  IN_INC,
   IN_HEAD_KEY,
   IN_HEAD_AW_COM_OR_END,
   IN_KEY_VAL_KEY,
@@ -87,6 +88,7 @@ class ConfigFileParser {
   bool hasKey(Sec section, Key key) const;
 
   const Val& getVal(Sec section, Key key) const;
+  const KeyVals& getKeyVals(Sec section) const;
 
  private:
   std::unordered_map<std::string, size_t> _secs;
