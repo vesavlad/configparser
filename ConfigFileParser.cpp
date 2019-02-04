@@ -75,7 +75,7 @@ void ConfigFileParser::parse(const std::string& path) {
         if (c == '\n') {
           throw ParseExc(l, pos, ">", "<newline>", path);
         } else if (c == '>') {
-          parse(tmp);
+          parse(relPath(tmp, path));
           tmp.clear();
           s = NONE;
         } else {
@@ -352,4 +352,13 @@ void ConfigFileParser::updateVals(size_t sec, const KeyVals& kvs) {
   for (auto& kv : kvs) {
     _kvs[sec][kv.first] = kv.second;
   }
+}
+
+// _____________________________________________________________________________
+std::string ConfigFileParser::relPath(const std::string& file,
+                                      std::string curF) const {
+  // pass absolute paths through unchanged
+  if (file.size() && file[0] == '/') return file;
+  curF.erase(std::find(curF.rbegin(), curF.rend(), '/').base(), curF.end());
+  return curF + "/" + file;
 }

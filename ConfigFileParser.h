@@ -99,5 +99,6 @@ class ConfigFileParser {
   bool toBool(std::string str) const;
 
   void updateVals(size_t sec, const KeyVals& kvs);
+  std::string relPath(const std::string& file, std::string curFile) const;
 };
 }
