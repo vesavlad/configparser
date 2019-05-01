@@ -360,5 +360,6 @@ std::string ConfigFileParser::relPath(const std::string& file,
   // pass absolute paths through unchanged
   if (file.size() && file[0] == '/') return file;
   curF.erase(std::find(curF.rbegin(), curF.rend(), '/').base(), curF.end());
+  if (!curF.size()) return file;
   return curF + "/" + file;
 }
