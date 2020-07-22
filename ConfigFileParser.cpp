@@ -16,16 +16,29 @@ using namespace configparser;
 ConfigFileParser::ConfigFileParser() {}
 
 // _____________________________________________________________________________
+void ConfigFileParser::parseStr(const std::string& str) {
+  std::stringstream ss;
+  ss << str;
+  parse(ss, "<string literal>");
+}
+
+// _____________________________________________________________________________
 void ConfigFileParser::parse(const std::string& path) {
-  State s = NONE;
-  std::set<std::string> headers;
-  KeyVals curKV;
-  std::string tmp, tmp2;
   std::ifstream is(path);
 
   if (!is.good()) {
     throw ParseFileExc(path);
   }
+
+  parse(is, path);
+}
+
+// _____________________________________________________________________________
+void ConfigFileParser::parse(std::istream& is, const std::string& path) {
+  State s = NONE;
+  std::set<std::string> headers;
+  KeyVals curKV;
+  std::string tmp, tmp2;
 
   char c;
   size_t l = 1, pos = 0, valLine = 0, valPos = 0;

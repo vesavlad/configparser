@@ -70,6 +70,10 @@ class ConfigFileParser {
  public:
   ConfigFileParser();
   void parse(const std::string& path);
+  void parse(std::istream& is, const std::string& path);
+  void parseStr(const std::string& str);
+
+  void addKV(const std::string& sec, const std::string& k, const std::string& v);
 
   const std::string& getStr(Sec sec, const Key& key) const;
   int getInt(Sec sec, const Key& key) const;
