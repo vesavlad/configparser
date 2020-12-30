@@ -1,4 +1,4 @@
-#include "configparse/parse_exception.h"
+#include "configparser/parse_exception.h"
 
 namespace configparser
 {

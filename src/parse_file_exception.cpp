@@ -1,8 +1,4 @@
-//
-// Created by Vesa Vlad on 30.12.2020.
-//
-
-#include "configparse/parse_file_exception.h"
+#include "configparser/parse_file_exception.h"
 
 namespace configparser
 {

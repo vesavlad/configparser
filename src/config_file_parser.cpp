@@ -1,10 +1,10 @@
 // Copyright 2015 Patrick Brosi
 // info@patrickbrosi.de
 
-#include "configparse/config_file_parser.h"
+#include "configparser/config_file_parser.h"
 
-#include "configparse/parse_file_exception.h"
-#include "configparse/parse_exception.h"
+#include "configparser/parse_file_exception.h"
+#include "configparser/parse_exception.h"
 
 #include <algorithm>
 #include <iostream>
