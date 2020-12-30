@@ -1,1 +1,4 @@
 *.swp
+cmake-build-*
+.vscode
+.idea
